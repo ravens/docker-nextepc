@@ -1,0 +1,57 @@
+version: '2'
+
+services:
+  mongodb:
+    image: mongo:latest
+    container_name: "mongodb"
+    volumes:
+      - ./data/db:/data/db
+  epc:
+    build: ./
+    container_name: epc
+    links:
+     - mongodb 
+    entrypoint:
+        - sleep
+        - infinity
+  #   entrypoint:
+  #    - /usr/bin/nextepc-mmed
+  #    - -f
+  #    - /etc/nextepc/mme.conf
+  # hss:
+  #   build: ./
+  #   container_name: hss
+  #   volumes:
+  #    - ./config:/etc/nextepc
+  #    - ./logs:/var/log/nextepc
+  #   links:
+  #    - mongodb 
+  #   entrypoint:
+  #    - /usr/bin/nextepc-hssd
+  #    - -f
+  #    - /etc/nextepc/hss.conf
+  # sgw:
+  #   build: ./
+  #   container_name: sgw
+  #   volumes:
+  #    - ./config:/etc/nextepc
+  #    - ./logs:/var/log/nextepc
+  #   links:
+  #    - mongodb 
+  #   entrypoint:
+  #    - /usr/bin/nextepc-sgwd
+  #    - -f
+  #    - /etc/nextepc/sgw.conf
+  # webui: 
+  #   build: ./
+  #   container_name: webui
+  #   volumes:
+  #    - ./config:/etc/nextepc
+  #    - ./logs:/var/log/nextepc
+  #   ports:
+  #    - 8080:80
+  #   links:
+  #    - mongodb 
+  #   entrypoint:
+  #    - /usr/bin/node 
+  #    - /usr/lib/node_modules/nextepc/server/index.js
