@@ -117,3 +117,9 @@ docker exec -it sgw tshark -i eth0
    79 27.420034537    45.45.0.3 ? 8.8.8.8      GTP <ICMP> 134 Echo (ping) request  id=0x0016, seq=2/512, ttl=64
    80 27.420090837    45.45.0.3 ? 8.8.8.8      GTP <ICMP> 134 Echo (ping) request  id=0x0016, seq=2/512, ttl=64
 ```
+
+## configuration
+
+ * nextEPC config is exclusively in ./config
+ * the IP addresses are declared in the config files and the docker-compose.yml
+ * the srsUE/srseNB are declared as environement variables in docker-compose.yml
