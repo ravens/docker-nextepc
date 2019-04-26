@@ -5,9 +5,11 @@ ip addr add 45.45.0.1/16 dev pgwtun
 #ip addr add cafe::1/16 dev pgwtun
 ip link set pgwtun up
 
-sleep 5
+# masquerade
+sh -c "echo 1 > /proc/sys/net/ipv4/ip_forward"
+iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE
+iptables -I INPUT -i pgwtun -j ACCEPT
 
-# admin / 1423
-DB_URI="mongodb://mongodb/nextepc" npm run start --prefix webui &
+#/nextepc/nextepc-epcd -f /config/nextepc.conf
 
-/nextepc/nextepc-epcd -f /config/nextepc.conf
+/nextepc/nextepc-pgw -f  /config/pgw.conf

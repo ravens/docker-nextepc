@@ -1,67 +1,126 @@
 version: '2'
 
+networks:
+  core_network:
+    #enable_ipv6: true
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 192.168.26.0/24
+          gateway: 192.168.26.1
+        # - subnet: 200 networks:1:1001:26::/64
+        #   gateway: 2001:1001:26::1
+
 services:
   mongodb:
     image: mongo:latest
     container_name: "mongodb"
     volumes:
       - ./mongodb_data:/data/db
-  epc:
+    hostname: mongodb
+    networks:
+      core_network:
+        ipv4_address: 192.168.26.5
+
+  webui:
     build: ./
-    container_name: epc
     depends_on:
-     - mongodb 
-    links:
-     - mongodb 
-    cap_add:
-     -  NET_ADMIN
-    devices:
-     -  /dev/net/tun
-    entrypoint:
-        - /bin/sh
-        - /config/run.sh
-    volumes:
-      - ./config:/config
+      - mongodb
+    environment:
+      - DB_URI=mongodb://mongodb/nextepc
+    container_name: webui
+    hostname: webui
     ports:
       - "3000:3000"
-  #   entrypoint:
-  #    - /usr/bin/nextepc-mmed
-  #    - -f
-  #    - /etc/nextepc/mme.conf
-  # hss:
+    entrypoint:
+      - "npm"
+      - "run"
+      - "start"
+      - "--prefix"
+      - "/nextepc/webui" 
+    networks:
+      core_network:
+        ipv4_address: 192.168.26.6
+
+  hss:
+    build: ./
+    depends_on:
+      - mongodb
+    container_name: hss
+    hostname: hss
+    entrypoint:
+      - "/bin/nextepc-hssd"
+      - "-f"
+      - "/etc/nextepc/hss.conf"
+    volumes:
+      - "./config:/etc/nextepc"
+    networks:
+      core_network:
+        ipv4_address: 192.168.26.10
+
+  # mme:
   #   build: ./
-  #   container_name: hss
-  #   volumes:
-  #    - ./config:/etc/nextepc
-  #    - ./logs:/var/log/nextepc
-  #   links:
-  #    - mongodb 
+  #   depends_on:
+  #     - mongodb
+  #   container_name: mme
+  #   hostname: mme
   #   entrypoint:
-  #    - /usr/bin/nextepc-hssd
-  #    - -f
-  #    - /etc/nextepc/hss.conf
+  #     - "/nextepc/nextepc-mmed"
+  #     - "-f /config/mme.conf"
+  #   volumes:
+  #     - ./config:/config
+  #   networks:
+  #     core_network:
+  #       ipv4_address: 192.168.26.20
+
   # sgw:
   #   build: ./
+  #   depends_on:
+  #     - mongodb
   #   container_name: sgw
-  #   volumes:
-  #    - ./config:/etc/nextepc
-  #    - ./logs:/var/log/nextepc
-  #   links:
-  #    - mongodb 
+  #   hostname: sgw
   #   entrypoint:
-  #    - /usr/bin/nextepc-sgwd
-  #    - -f
-  #    - /etc/nextepc/sgw.conf
-  # webui: 
+  #     - "/nextepc/nextepc-sgwd"
+  #     - "-f /config/sgw.conf"
+  #   volumes:
+  #     - ./config:/config
+  #   networks:
+  #     core_network:
+  #       ipv4_address: 192.168.26.30
+
+  # pgw:
   #   build: ./
-  #   container_name: webui
-  #   volumes:
-  #    - ./config:/etc/nextepc
-  #    - ./logs:/var/log/nextepc
-  #   ports:
-  #    - 8080:80
-  #   links:
-  #    - mongodb 
+  #   depends_on:
+  #     - mongodb
+  #   container_name: pgw
+  #   hostname: pgw
   #   entrypoint:
-  #    - /usr/bin/node 
-  #    - /usr/lib/node_modules/nextepc/server/index.js
+  #     - "/bin/sh"
+  #     - "/config/run.sh"
+  #   cap_add:
+  #     -  NET_ADMIN
+  #   devices:
+  #     -  /dev/net/tun
+  #   volumes:
+  #     - ./config:/config
+  #   networks:
+  #     core_network:
+  #       ipv4_address: 192.168.26.40
+
+  # pcrf:
+  #    build: ./
+  #   depends_on:
+  #     - mongodb
+  #   container_name: pcrf
+  #   hostname: pcrf
+  #   entrypoint:
+  #     - "/nextepc/nextepc-pcrfd"
+  #     - "-f /config/pcrf.conf"
+  #   volumes:
+  #     - ./config:/config
+  #   networks:
+  #     core_network:
+  #       ipv4_address: 192.168.26.50
+
+

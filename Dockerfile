@@ -19,7 +19,7 @@ RUN apt-get update
 RUN apt-get -qqy install autoconf libtool gcc pkg-config git flex bison libsctp-dev libgnutls28-dev libgcrypt-dev libssl-dev libmongoc-dev libbson-dev libyaml-dev mongodb-clients
 RUN git clone https://github.com/acetcom/nextepc
 
-RUN cd nextepc/ && autoreconf -iv && ./configure --prefix=`pwd`/install && make -j `nproc` && make install
+RUN cd nextepc/ && autoreconf -iv && ./configure --prefix=/ && make -j `nproc` && make install
 
 
 RUN apt-get -y install curl gnupg
@@ -28,6 +28,6 @@ RUN apt-get -y install nodejs
 
 RUN cd nextepc/webui && npm install && npm run build
 
-WORKDIR /nextepc
+WORKDIR /
 
 EXPOSE 3000
