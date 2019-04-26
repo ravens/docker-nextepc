@@ -82,3 +82,22 @@ docker restart ue # reconnect UE
 ```
 
 In my experience the FauxRF is not really super stable, but enough to generate S1AP and GTP traffic and start learning on LTE networks on an end-to-end fashion.
+
+One can get immediatly some cellular traffic, for example at the SGW:
+```
+docker exec -it sgw tshark -i eth0
+   61 14.520414499 192.168.26.20 ? 192.168.26.30 GTPv2 84 Delete Session Request
+   62 14.520473219 192.168.26.30 ? 192.168.26.40 GTPv2 84 Delete Session Request
+   63 14.522025983 192.168.26.40 ? 192.168.26.30 GTPv2 60 Delete Session Response
+   64 14.522073889 192.168.26.30 ? 192.168.26.20 GTPv2 60 Delete Session Response
+   65 19.118310518 192.168.26.20 ? 192.168.26.30 GTPv2 205 Create Session Request
+   66 19.118397529 192.168.26.30 ? 192.168.26.40 GTPv2 205 Create Session Request
+   67 19.120766491 192.168.26.40 ? 192.168.26.30 GTPv2 109 Create Session Response
+   68 19.120825323 192.168.26.30 ? 192.168.26.20 GTPv2 109 Create Session Response
+   69 19.352360956 192.168.26.20 ? 192.168.26.30 GTPv2 76 Modify Bearer Request
+   70 19.352427459 192.168.26.30 ? 192.168.26.20 GTPv2 60 Modify Bearer Response
+   77 26.399908106    45.45.0.3 ? 8.8.8.8      GTP <ICMP> 134 Echo (ping) request  id=0x0016, seq=1/256, ttl=64
+   78 26.399944051    45.45.0.3 ? 8.8.8.8      GTP <ICMP> 134 Echo (ping) request  id=0x0016, seq=1/256, ttl=64
+   79 27.420034537    45.45.0.3 ? 8.8.8.8      GTP <ICMP> 134 Echo (ping) request  id=0x0016, seq=2/512, ttl=64
+   80 27.420090837    45.45.0.3 ? 8.8.8.8      GTP <ICMP> 134 Echo (ping) request  id=0x0016, seq=2/512, ttl=64
+```
