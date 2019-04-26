@@ -64,7 +64,7 @@ services:
   mme:
      build: ./
      depends_on:
-       - mongodb
+       - hss
      container_name: mme
      hostname: mme
      entrypoint:
@@ -76,53 +76,51 @@ services:
        core_network:
          ipv4_address: 192.168.26.20
 
-  # sgw:
-  #   build: ./
-  #   depends_on:
-  #     - mongodb
-  #   container_name: sgw
-  #   hostname: sgw
-  #   entrypoint:
-  #     - "/nextepc/nextepc-sgwd"
-  #     - "-f /config/sgw.conf"
-  #   volumes:
-  #     - ./config:/config
-  #   networks:
-  #     core_network:
-  #       ipv4_address: 192.168.26.30
+  sgw:
+     build: ./
+     container_name: sgw
+     hostname: sgw
+     entrypoint:
+      - "/bin/sh"
+      - "/etc/nextepc/run_sgw.sh"
+     volumes:
+      - "./config:/etc/nextepc"
+     networks:
+       core_network:
+         ipv4_address: 192.168.26.30
 
-  # pgw:
-  #   build: ./
-  #   depends_on:
-  #     - mongodb
-  #   container_name: pgw
-  #   hostname: pgw
-  #   entrypoint:
-  #     - "/bin/sh"
-  #     - "/config/run.sh"
-  #   cap_add:
-  #     -  NET_ADMIN
-  #   devices:
-  #     -  /dev/net/tun
-  #   volumes:
-  #     - ./config:/config
-  #   networks:
-  #     core_network:
-  #       ipv4_address: 192.168.26.40
+  pgw:
+     build: ./
+     depends_on:
+       - mongodb
+     container_name: pgw
+     hostname: pgw
+     entrypoint:
+      - "/bin/sh"
+      - "/etc/nextepc/run_pgw.sh"
+     volumes:
+      - "./config:/etc/nextepc"
+     cap_add:
+       -  NET_ADMIN
+     devices:
+       -  /dev/net/tun
+     networks:
+       core_network:
+         ipv4_address: 192.168.26.40
 
-  # pcrf:
-  #    build: ./
-  #   depends_on:
-  #     - mongodb
-  #   container_name: pcrf
-  #   hostname: pcrf
-  #   entrypoint:
-  #     - "/nextepc/nextepc-pcrfd"
-  #     - "-f /config/pcrf.conf"
-  #   volumes:
-  #     - ./config:/config
-  #   networks:
-  #     core_network:
-  #       ipv4_address: 192.168.26.50
+  pcrf:
+    build: ./
+    depends_on:
+       - mongodb
+       - hss
+    container_name: pcrf
+    hostname: pcrf
+    entrypoint:
+      - "/bin/sh"
+      - "/etc/nextepc/run_pcrf.sh"
+    networks:
+       core_network:
+         ipv4_address: 192.168.26.50
+
 
 
