@@ -14,4 +14,7 @@ RUN apt-get -y install nodejs
 
 RUN cd nextepc/webui && npm install && npm run build
 
+ENV DEBIAN_FRONTEND=noninteractive
+RUN apt-get -qy install tshark
+
 WORKDIR /
