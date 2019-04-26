@@ -1,5 +1,8 @@
 version: '2'
 
+volumes:
+ mongodb_data:
+
 networks:
   core_network:
     #enable_ipv6: true
@@ -17,7 +20,7 @@ services:
     image: mongo:latest
     container_name: "mongodb"
     volumes:
-      - ./mongodb_data:/data/db
+      - mongodb_data:/data/db
     hostname: mongodb
     networks:
       core_network:
