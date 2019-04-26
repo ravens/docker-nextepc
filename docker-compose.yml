@@ -118,6 +118,8 @@ services:
     entrypoint:
       - "/bin/sh"
       - "/etc/nextepc/run_pcrf.sh"
+    volumes:
+      - "./config:/etc/nextepc"
     networks:
        core_network:
          ipv4_address: 192.168.26.50
