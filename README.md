@@ -49,7 +49,7 @@ enb        | User 0x46 connected
 
 It means the UE has correctly attached the core network.
 
-In order to send some traffic when the UE is connected:
+In order to send some traffic when the UE is attached:
 ```
 docker exec -it ue route add default tun_srsue # define default route
 docker exec -it ue ping 8.8.8.8
