@@ -12,4 +12,8 @@ iptables -I INPUT -i pgwtun -j ACCEPT
 
 #/nextepc/nextepc-epcd -f /config/nextepc.conf
 
-/nextepc/nextepc-pgw -f  /config/pgw.conf
+touch /var/log/nextepc/pgw.log
+
+tail -f /var/log/nextepc/pgw.log &
+
+/bin/nextepc-pgwd -f  /etc/nextepc/pgw.conf
