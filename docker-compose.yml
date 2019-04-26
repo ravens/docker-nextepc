@@ -5,15 +5,25 @@ services:
     image: mongo:latest
     container_name: "mongodb"
     volumes:
-      - ./data/db:/data/db
+      - ./mongodb_data:/data/db
   epc:
     build: ./
     container_name: epc
+    depends_on:
+     - mongodb 
     links:
      - mongodb 
+    cap_add:
+     -  NET_ADMIN
+    devices:
+     -  /dev/net/tun
     entrypoint:
-        - sleep
-        - infinity
+        - /bin/sh
+        - /config/run.sh
+    volumes:
+      - ./config:/config
+    ports:
+      - "3000:3000"
   #   entrypoint:
   #    - /usr/bin/nextepc-mmed
   #    - -f
