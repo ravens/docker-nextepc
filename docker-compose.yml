@@ -53,29 +53,28 @@ services:
     container_name: hss
     hostname: hss
     entrypoint:
-      - "/bin/nextepc-hssd"
-      - "-f"
-      - "/etc/nextepc/hss.conf"
+      - "/bin/sh"
+      - "/etc/nextepc/run_hss.sh"
     volumes:
       - "./config:/etc/nextepc"
     networks:
       core_network:
         ipv4_address: 192.168.26.10
 
-  # mme:
-  #   build: ./
-  #   depends_on:
-  #     - mongodb
-  #   container_name: mme
-  #   hostname: mme
-  #   entrypoint:
-  #     - "/nextepc/nextepc-mmed"
-  #     - "-f /config/mme.conf"
-  #   volumes:
-  #     - ./config:/config
-  #   networks:
-  #     core_network:
-  #       ipv4_address: 192.168.26.20
+  mme:
+     build: ./
+     depends_on:
+       - mongodb
+     container_name: mme
+     hostname: mme
+     entrypoint:
+      - "/bin/sh"
+      - "/etc/nextepc/run_mme.sh"
+     volumes:
+      - "./config:/etc/nextepc"
+     networks:
+       core_network:
+         ipv4_address: 192.168.26.20
 
   # sgw:
   #   build: ./

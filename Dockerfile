@@ -29,5 +29,3 @@ RUN apt-get -y install nodejs
 RUN cd nextepc/webui && npm install && npm run build
 
 WORKDIR /
-
-EXPOSE 3000
