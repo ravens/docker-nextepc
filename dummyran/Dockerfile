@@ -18,14 +18,12 @@ RUN apt-get install -yq \
      unzip
 WORKDIR /root
 
-# srsLTE with shared memory element
-ARG COMMIT=5d82f19988bc148d7f4cec7a0f29184375a64b40
-RUN curl -LO https://github.com/jgiovatto/srsLTE/archive/${COMMIT}.zip \
- && unzip ${COMMIT}.zip
+RUN apt-get -qy install git
+RUN git clone https://github.com/jgiovatto/srsLTE.git && cd srsLTE && git checkout faux_rf
 
-RUN mkdir -p /root/srsLTE-${COMMIT}/build
+RUN mkdir -p /root/srsLTE/build
 
-WORKDIR /root/srsLTE-${COMMIT}/build
+WORKDIR /root/srsLTE/build
 RUN cmake ../
 RUN make install
 RUN ldconfig
@@ -34,15 +32,15 @@ WORKDIR /root
 RUN mkdir /config
 
 # eNB specific files
-RUN cp /root/srsLTE-${COMMIT}/srsenb/enb.conf.fauxrf.example /config/enb.conf.fauxrf
-RUN cp /root/srsLTE-${COMMIT}/srsenb/drb.conf.example /config/drb.conf
-RUN cp /root/srsLTE-${COMMIT}/srsenb/enb.conf.example /config/enb.conf
-RUN cp /root/srsLTE-${COMMIT}/srsenb/rr.conf.example /config/rr.conf
-RUN cp /root/srsLTE-${COMMIT}/srsenb/sib.conf.example /config/sib.conf
-RUN cp /root/srsLTE-${COMMIT}/srsenb/sib.conf.mbsfn.example /config/sib.mbsfn.conf
+RUN cp /root/srsLTE/srsenb/enb.conf.fauxrf.example /config/enb.conf.fauxrf
+RUN cp /root/srsLTE/srsenb/drb.conf.example /config/drb.conf
+RUN cp /root/srsLTE/srsenb/enb.conf.example /config/enb.conf
+RUN cp /root/srsLTE/srsenb/rr.conf.example /config/rr.conf
+RUN cp /root/srsLTE/srsenb/sib.conf.example /config/sib.conf
+RUN cp /root/srsLTE/srsenb/sib.conf.mbsfn.example /config/sib.mbsfn.conf
 
 # UE specific files
-RUN cp /root/srsLTE-${COMMIT}/srsue/ue.conf.fauxrf.example /config/ue.conf.fauxrf
+RUN cp /root/srsLTE/srsue/ue.conf.fauxrf.example /config/ue.conf.fauxrf
 # patch to prevent overriding OPC/OP
 RUN sed -i s,"opc  = 63BFA50EE6523365FF14C1F45F88737D","#opc  = 63BFA50EE6523365FF14C1F45F88737D",g /config/ue.conf.fauxrf
 
