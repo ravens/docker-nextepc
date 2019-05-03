@@ -96,8 +96,7 @@ docker exec -it ue ping 8.8.8.8
 docker exec -it ue /bin/bash # interactive shell
 docker restart ue # reconnect UE
 ```
-
-In my experience the FauxRF is not really super stable, but enough to generate S1AP and GTP traffic and start learning on LTE networks on an end-to-end fashion.
+fauxRF is still not upstream, but its results are promising for CI/CD usage. 
 
 One can get immediatly some cellular traffic, for example at the SGW:
 ```
