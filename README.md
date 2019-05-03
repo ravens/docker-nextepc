@@ -41,7 +41,7 @@ This is simular to the tutorial of NextEPC (https://nextepc.org/docs/tutorial/1-
 
 We need to provision the HSS database with the IMSI of the SIM card we are using in our simulated UE. In order to provision it right now we go with the Web interface from NextEPC:
 ```
-docker-compose up webui -d
+docker-compose up -d webui 
 ```
 
 Then go on http://localhost:3000, user admin, password 1423 then we need to fill the following info:
