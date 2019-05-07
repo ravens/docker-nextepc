@@ -9,7 +9,7 @@ RUN add-apt-repository ppa:open5gs/latest
 RUN apt update
 RUN apt -qy install ogslib-dev
 
-RUN git clone https://github.com/acetcom/nextepc
+RUN git clone https://github.com/open5gs/nextepc
 
 RUN cd nextepc/ && autoreconf -iv && ./configure --prefix=/ && make -j `nproc` && make install
 
