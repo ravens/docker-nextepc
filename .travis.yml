@@ -1,0 +1,9 @@
+---
+sudo: required
+dist: xenial
+
+install:
+  - sudo rm -Rf /var/lib/apt/lists/lock /var/cache/apt/archives/lock /var/cache/apt/archives/lock
+
+script:
+  - docker-compose build --no-cache
