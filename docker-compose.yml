@@ -46,6 +46,20 @@ services:
       core_network:
         ipv4_address: 192.168.26.6
 
+  mongodbloader:
+    image: mongo:latest
+    depends_on:
+      - webui
+    volumes:
+      - "./db/run_db.sh:/tmp/run.sh"
+      - "./db/imsi1.json:/tmp/imsi1.json"
+    entrypoint:
+      - /bin/sh
+      - /tmp/run.sh
+    networks:
+      core_network:
+        ipv4_address: 192.168.26.19
+
   hss:
     build: ./
     depends_on:

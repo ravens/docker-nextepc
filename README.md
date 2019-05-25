@@ -35,24 +35,6 @@ Docker-based LTE environement featuring NextEPC as MME, SGW and PGW, and srsLTE 
 docker-compose build --no-cache
 ```
 
-## initial configuration (one time only)
-
-This is simular to the tutorial of NextEPC (https://nextepc.org/docs/tutorial/1-your_first_lte/).
-
-We need to provision the HSS database with the IMSI of the SIM card we are using in our simulated UE. In order to provision it right now we go with the Web interface from NextEPC:
-```
-docker-compose up -d webui 
-```
-
-Then go on http://localhost:3000, user admin, password 1423 then we need to fill the following info:
-```
-IMSI : 001010000000001
-K : c8eba87c1074edd06885cb0486718341
-OPc : 17b6c0157895bcaa1efc1cef55033f5f
-``` 
-
-And that's it.
-
 ## running
 
 We just need to run the docker-compose:
@@ -78,13 +60,29 @@ webui     npm run start --prefix /ne ...   Up      0.0.0.0:3000->3000/tcp
 
 After a while this should settle done and you should see the following kind of output :
 ```
-ue         | Found PLMN:  Id=00101, TAC=1
-ue         | Random Access Transmission: seq=50, ra-rnti=0x2
-enb        | RACH:  tti=6221, preamble=50, offset=0, temp_crnti=0x46
-ue         | RRC Connected
-ue         | Random Access Complete.     c-rnti=0x46, ta=0
-ue         | Network attach successful. IP: 45.45.0.2
-enb        | User 0x46 connected
+e               | Found PLMN:  Id=00101, TAC=1
+ue               | Random Access Transmission: seq=46, ra-rnti=0x2
+enb              | RACH:  tti=631, preamble=46, offset=0, temp_crnti=0x46
+ue               | RRC Connected
+ue               | Random Access Complete.     c-rnti=0x46, ta=0
+sgw              | 05/25 22:42:54.275: [gtp] INFO: gtp_connect() [192.168.26.20]:2123 (gtp_path.c:77)
+sgw              | 05/25 22:42:54.275: [gtp] INFO: gtp_connect() [192.168.26.40]:2123 (gtp_path.c:77)
+pgw              | 05/25 22:42:54.276: [gtp] INFO: gtp_connect() [192.168.26.30]:2123 (gtp_path.c:77)
+pgw              | 05/25 22:42:54.276: [pgw] INFO: UE IMSI:[001010000000001] APN:[internet] IPv4:[45.45.0.2] IPv6:[] (pgw_context.c:922)
+pgw              | 05/25 22:42:54.276: [gtp] INFO: gtp_connect() [192.168.26.30]:2152 (gtp_path.c:77)
+sgw              | 05/25 22:42:54.279: [gtp] INFO: gtp_connect() [192.168.26.40]:2152 (gtp_path.c:77)
+ue               | Network attach successful. IP: 45.45.0.2
+enb              | User 0x46 connected
+pgw              | 05/25 22:42:54.276: [gtp] INFO: gtp_connect() [192.168.26.30]:2123 (gtp_path.c:77)
+pgw              | 05/25 22:42:54.276: [pgw] INFO: UE IMSI:[001010000000001] APN:[internet] IPv4:[45.45.0.2] IPv6:[] (pgw_context.c:922)
+pgw              | 05/25 22:42:54.276: [gtp] INFO: gtp_connect() [192.168.26.30]:2152 (gtp_path.c:77)
+sgw              | 05/25 22:42:54.275: [gtp] INFO: gtp_connect() [192.168.26.20]:2123 (gtp_path.c:77)
+sgw              | 05/25 22:42:54.275: [gtp] INFO: gtp_connect() [192.168.26.40]:2123 (gtp_path.c:77)
+sgw              | 05/25 22:42:54.279: [gtp] INFO: gtp_connect() [192.168.26.40]:2152 (gtp_path.c:77)
+sgw              | 05/25 22:42:54.523: [gtp] INFO: gtp_connect() [192.168.26.60]:2152 (gtp_path.c:77)
+ue               | (t
+ue               | ! 25/5/2019 22:42:54 TZ:0
+sgw              | 05/25 22:42:54.523: [gtp] INFO: gtp_connect() [192.168.26.60]:2152 (gtp_path.c:77)
 ```
 
 It means the UE has correctly attached the core network.
