@@ -36,12 +36,11 @@ services:
     hostname: webui
     ports:
       - "3000:3000"
+    volumes:
+        - "./config:/etc/nextepc"
     entrypoint:
-      - "npm"
-      - "run"
-      - "start"
-      - "--prefix"
-      - "/nextepc/webui" 
+      - "/bin/sh"
+      - "/etc/nextepc/run_webui.sh"
     networks:
       core_network:
         ipv4_address: 192.168.26.6
@@ -137,7 +136,7 @@ services:
          ipv4_address: 192.168.26.50
 
   enb:
-    build: ./dummyran
+    build: ./virtual-UE-eNB
     container_name: enb
     depends_on:
       - mme
@@ -165,7 +164,7 @@ services:
 
   ue:
     container_name: ue
-    build: ./dummyran
+    build: ./virtual-UE-eNB
     ipc: "container:enb"
     cap_add:
       - NET_ADMIN
