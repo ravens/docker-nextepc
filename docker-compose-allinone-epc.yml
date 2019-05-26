@@ -85,7 +85,7 @@ services:
     build: ./virtual-UE-eNB
     container_name: enb
     depends_on:
-      - mme
+      - epc
     ipc: shareable
     cap_add:
       - SYS_NICE
