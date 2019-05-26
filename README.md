@@ -1,5 +1,5 @@
 # docker-nextepc
-Docker-based LTE environement featuring NextEPC as MME, SGW and PGW, and srsLTE using the FauxRF patch to simulate a UE and an eNB.
+Docker-based LTE environement featuring NextEPC as MME, SGW and PGW, and srsLTE using the FauxRF patch to simulate a UE and an eNB. Also provided, alternate docker-compose for all-in-one EPC kind of node, and physical UE/eNB lab configuration. 
 
 ## architecture
 
@@ -121,7 +121,13 @@ docker exec -it sgw tshark -i eth0
  ```
  ip link set eth0 master br-lab
  ```
+ A DHCP service using dnsmasq is providing addresses to the physical eNB in that case.
 
 ## configuration
 
- * the SIM card provisioned in the virtual UE (from srsUE) and the EPC is using the following parameters : IMSI=001010000000001, Ki=c8eba87c1074edd06885cb0486718341, OPc=17b6c0157895bcaa1efc1cef55033f5f. Make sure to flash your SIM accordingly when using the physical eNB docker-compose example.
+The SIM card provisioned in the virtual UE (from srsUE) and the EPC is using the following parameters : 
+ * IMSI=001010000000001
+ * Ki=c8eba87c1074edd06885cb0486718341
+ * OPc=17b6c0157895bcaa1efc1cef55033f5f
+ 
+ Make sure to flash your SIM accordingly when using the physical eNB docker-compose example with your own eNB, using the sysmocom SIM for example.
