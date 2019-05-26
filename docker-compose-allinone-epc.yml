@@ -85,28 +85,18 @@ services:
     build: ./virtual-UE-eNB
     container_name: enb
     depends_on:
-      - epc
+      - mme
     ipc: shareable
     cap_add:
       - SYS_NICE
     networks:
       core_network:
          ipv4_address: 192.168.26.60
-    command:
-      - srsenb
-      - /config/enb.conf.fauxrf
-      - --enb.name=dummyENB01
-      - --enb.mcc=001
-      - --enb.mnc=01
-      - --enb.enb_id=18AF1
-      - --enb.tac=0x0001
-      - --enb.cell_id=01
-      - --enb.mme_addr=192.168.26.20
-      - --enb.gtp_bind_addr=192.168.26.60
-      - --enb.s1c_bind_addr=192.168.26.60
-      - --enb_files.rr_config=/config/rr.conf
-      - --enb_files.sib_config=/config/sib.conf
-      - --enb_files.drb_config=/config/drb.conf
+    volumes:
+      - ./virtual-UE-eNB/run_enb.sh:/root/run_enb.sh
+    entrypoint:
+      - /bin/sh
+      - /root/run_enb.sh
 
   ue:
     container_name: ue
@@ -120,12 +110,10 @@ services:
     network_mode: "none"
     depends_on:
       - enb
-    command:
-      - srsue
-      - /config/ue.conf.fauxrf
-      - --usim.imsi=001010000000001
-      - --usim.k=c8eba87c1074edd06885cb0486718341
-      - --usim.algo=milenage
-      - --usim.opc=17b6c0157895bcaa1efc1cef55033f5f
-      - --nas.apn=internet
+    volumes:
+      - ./virtual-UE-eNB/run_ue.sh:/root/run_ue.sh
+    entrypoint:
+      - /bin/sh
+      - /root/run_ue.sh
+
 
