@@ -16,4 +16,7 @@ touch /var/log/nextepc/nextepc.log
 
 tail -f /var/log/nextepc/nextepc.log &
 
+echo "Waiting for mongodb to be ready..."
+sleep 5
+
 /bin/nextepc-epcd -f /etc/nextepc/nextepc.conf
