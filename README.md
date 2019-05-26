@@ -115,8 +115,13 @@ docker exec -it sgw tshark -i eth0
    80 27.420090837    45.45.0.3 ? 8.8.8.8      GTP <ICMP> 134 Echo (ping) request  id=0x0016, seq=2/512, ttl=64
 ```
 
+## others options :
+ * all-in-one EPC using [docker-compose -f docker-compose-allinone-epc.yml](./docker-compose-allinone-epc.yml)
+ * all-in-one EPC with a physical eNB using [docker-compose -f docker-compose-allinone-epc-physical-eNB.yml](./docker-compose-allinone-epc-physical-eNB.yml) - in that case the docker-compose is creating a br-lab device, you just need to add conveniently your physical network to that bridge using something like :
+ ```
+ ip link set eth0 master br-lab
+ ```
+
 ## configuration
 
- * nextEPC config is exclusively in ./config
- * the IP addresses are declared in the config files and the docker-compose.yml
- * the srsUE/srseNB are declared as environement variables in docker-compose.yml
+ * the SIM card provisioned in the virtual UE (from srsUE) and the EPC is using the following parameters : IMSI=001010000000001, Ki=c8eba87c1074edd06885cb0486718341, OPc=17b6c0157895bcaa1efc1cef55033f5f. Make sure to flash your SIM accordingly when using the physical eNB docker-compose example.
