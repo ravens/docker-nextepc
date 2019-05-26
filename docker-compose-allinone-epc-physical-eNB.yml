@@ -1,0 +1,94 @@
+version: '2'
+
+volumes:
+ mongodb_data:
+
+networks:
+  core_network:
+    driver: bridge
+    driver_opts:
+      com.docker.network.bridge.name: br-lab
+    ipam:
+      driver: default
+      config:
+        - subnet: 192.168.26.0/24
+          gateway: 192.168.26.1
+
+services:
+  dhcp:
+    build: ./dhcp
+    container_name: dhcp
+    hostname: dhcp
+    restart: on-failure
+    cap_add:
+       -  NET_ADMIN
+    volumes:
+      - "./dhcp/dnsmasq.conf:/root/dnsmasq.conf"
+      - "./dhcp/run.sh:/root/run.sh"
+    networks:
+      core_network:
+        ipv4_address: 192.168.26.2
+
+  mongodb:
+    image: mongo:latest
+    container_name: "mongodb"
+    volumes:
+      - mongodb_data:/data/db
+    hostname: mongodb
+    restart: on-failure
+    networks:
+      core_network:
+        ipv4_address: 192.168.26.5
+
+  mongodbloader:
+    image: mongo:latest
+    depends_on:
+      - webui
+    volumes:
+      - "./db/run_db.sh:/tmp/run.sh"
+      - "./db/imsi1.json:/tmp/imsi1.json"
+    entrypoint:
+      - /bin/sh
+      - /tmp/run.sh
+    networks:
+      core_network:
+        ipv4_address: 192.168.26.19
+
+  webui:
+    build: ./
+    depends_on:
+      - mongodb
+    environment:
+      - DB_URI=mongodb://mongodb/nextepc
+    container_name: webui
+    restart: on-failure
+    hostname: webui
+    volumes:
+        - "./config-allinone:/etc/nextepc"
+    entrypoint:
+      - "/bin/sh"
+      - "/etc/nextepc/run_webui.sh"
+    networks:
+      core_network:
+        ipv4_address: 192.168.26.6
+
+  epc:
+    build: ./
+    depends_on:
+      - mongodb
+    container_name: epc
+    hostname: epc
+    restart: on-failure
+    entrypoint:
+        - "/bin/sh"
+        - "/etc/nextepc/run_epc.sh"
+    volumes:
+        - "./config-allinone:/etc/nextepc"
+    cap_add:
+       -  NET_ADMIN
+    devices:
+       - /dev/net/tun
+    networks:
+      core_network:
+        ipv4_address: 192.168.26.20
+
