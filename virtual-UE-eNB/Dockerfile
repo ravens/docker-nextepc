@@ -25,7 +25,7 @@ RUN mkdir -p /root/srsLTE/build
 
 WORKDIR /root/srsLTE/build
 RUN cmake ../
-RUN make install
+RUN make -j `nproc` install
 RUN ldconfig
 
 WORKDIR /root
