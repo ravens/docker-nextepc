@@ -46,7 +46,7 @@ services:
       - webui
     volumes:
       - "./db/run_db.sh:/tmp/run.sh"
-      - "./db/imsi1-physicaleNB.json:/tmp/imsi1.json"
+      - "./db/imsi1-physical-eNB.json:/tmp/imsi1.json"
     entrypoint:
       - /bin/sh
       - /tmp/run.sh
