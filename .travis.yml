@@ -1,9 +1,9 @@
 ---
 sudo: required
-dist: xenial
+dist: bionic
 
 install:
   - sudo rm -Rf /var/lib/apt/lists/lock /var/cache/apt/archives/lock /var/cache/apt/archives/lock
 
 script:
-  - docker-compose build --no-cache
+  - docker-compose -f docker-compose-allinone-epc-physical-eNB.yml build --no-cache
