@@ -46,7 +46,7 @@ services:
       - webui
     volumes:
       - "./db/run_db.sh:/tmp/run.sh"
-      - "./db/imsi1.json:/tmp/imsi1.json"
+      - "./db/imsi1-physicaleNB.json:/tmp/imsi1.json"
     entrypoint:
       - /bin/sh
       - /tmp/run.sh
@@ -64,7 +64,7 @@ services:
     restart: on-failure
     hostname: webui
     volumes:
-        - "./config-allinone:/etc/nextepc"
+        - "./config-allinone-physical-eNB:/etc/nextepc"
     entrypoint:
       - "/bin/sh"
       - "/etc/nextepc/run_webui.sh"
@@ -83,7 +83,7 @@ services:
         - "/bin/sh"
         - "/etc/nextepc/run_epc.sh"
     volumes:
-        - "./config-allinone:/etc/nextepc"
+        - "./config-allinone-physical-eNB:/etc/nextepc"
     cap_add:
        -  NET_ADMIN
     devices:
