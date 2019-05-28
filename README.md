@@ -1,6 +1,8 @@
 # docker-nextepc
 Docker-based LTE environement featuring NextEPC as MME, SGW and PGW, and srsLTE using the FauxRF patch to simulate a UE and an eNB. Also provided, alternate docker-compose for all-in-one EPC kind of node, and physical UE/eNB lab configuration. 
 
+[![Build Status](https://travis-ci.org/ravens/docker-nextepc.svg?branch=master)](https://travis-ci.org/ravens/docker-nextepc)
+
 ## architecture
 
 ```
