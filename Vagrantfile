@@ -32,7 +32,7 @@ Vagrant.configure("2") do |epc|
   epc.vm.provision "file", source: "Dockerfile", destination: "$HOME/epc/"
   epc.vm.provision "file", source: "docker-compose-standalone.yml", destination: "$HOME/epc/docker-compose.yml"
   epc.vm.provision "file", source: "config-standalone/", destination: "$HOME/epc/"
-  epc.vm.provision "file", source: "db/", destination: "$HOME/epc/"
+  epc.vm.provision "file", source: "provisioning/", destination: "$HOME/epc/"
 
   # provisioning and running EPC services
   epc.vm.provision "ansible" do |ansible|

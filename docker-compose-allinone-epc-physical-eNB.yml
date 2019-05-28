@@ -45,8 +45,8 @@ services:
     depends_on:
       - webui
     volumes:
-      - "./db/run_db.sh:/tmp/run.sh"
-      - "./db/imsi1-physical-eNB.json:/tmp/imsi1.json"
+      - "./provisioning/db/run_db.sh:/tmp/run.sh"
+      - "./provisioning/db/imsi1-physical-eNB.json:/tmp/imsi1.json"
     environment:
       - DB_HOST=mongodb
     entrypoint:
