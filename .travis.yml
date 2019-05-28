@@ -6,4 +6,4 @@ install:
   - sudo rm -Rf /var/lib/apt/lists/lock /var/cache/apt/archives/lock /var/cache/apt/archives/lock
 
 script:
-  - docker-compose -f docker-compose-allinone-epc-physical-eNB.yml build --no-cache
+  - docker-compose -f docker-compose-standalone.yml build --no-cache

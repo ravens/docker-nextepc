@@ -1,0 +1,62 @@
+version: '2'
+
+volumes:
+ mongodb_data:
+
+services:
+  mongodb:
+    image: mongo:latest
+    container_name: "mongodb"
+    volumes:
+      - mongodb_data:/data/db
+    network_mode: host
+
+  webui:
+    build: ./
+    depends_on:
+      - mongodb
+    environment:
+      - DB_URI=mongodb://127.0.0.1/nextepc
+    container_name: webui
+    network_mode: host
+    restart: always
+    environment:
+        - MONGODB_STARTUP_TIME=10
+    entrypoint:
+        - "/bin/sh"
+        - "/etc/nextepc/run_webui.sh"
+    volumes:
+        - "./config-standalone:/etc/nextepc"
+
+  epc:
+    build: ./
+    depends_on:
+      - mongodb
+    container_name: epc
+    network_mode: host
+    restart: always
+    environment:
+        - MONGODB_STARTUP_TIME=10
+    entrypoint:
+        - "/bin/sh"
+        - "/etc/nextepc/run_epc.sh"
+    volumes:
+        - "./config-standalone:/etc/nextepc"
+    cap_add:
+       -  NET_ADMIN
+    devices:
+       - /dev/net/tun
+
+  mongodbloader:
+    image: mongo:latest
+    depends_on:
+      - webui
+    environment:
+      - DB_HOST=127.0.0.1
+    volumes:
+      - "./db/run_db.sh:/tmp/run.sh"
+      - "./db/imsi1.json:/tmp/imsi1.json"
+    entrypoint:
+      - /bin/sh
+      - /tmp/run.sh
+    network_mode: host

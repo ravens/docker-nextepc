@@ -1,0 +1,25 @@
+---
+- hosts: all 
+  become: true
+  tasks:
+  - name: Install docker.io 
+    apt: name="docker.io" state=present update_cache=yes
+  - name: Install docker-compose
+    apt: name="docker-compose" state=present
+  - name: adding existing user to group docker
+    user:
+      name: '{{ ansible_user }}'
+      groups: docker
+      append: yes
+  - name: Building and running the EPC
+    docker_service:
+      project_src: /home/{{ ansible_user }}/epc
+      state: present
+    register: output
+  - debug:
+      var: output
+  - assert:
+      that:
+        - "epc.epc.state.running"
+        - "webui.webui.state.running"
+        - "mongodb.mongodb.state.running"
