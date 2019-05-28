@@ -16,15 +16,15 @@ networks:
 
 services:
   dhcp:
-    build: ./dhcp
+    build: ./services/dhcp
     container_name: dhcp
     hostname: dhcp
     restart: on-failure
     cap_add:
        -  NET_ADMIN
     volumes:
-      - "./dhcp/dnsmasq.conf:/root/dnsmasq.conf"
-      - "./dhcp/run.sh:/root/run.sh"
+      - "./services/dhcp/dnsmasq.conf:/root/dnsmasq.conf"
+      - "./services/dhcp/run.sh:/root/run.sh"
     networks:
       core_network:
         ipv4_address: 192.168.26.2
