@@ -47,6 +47,8 @@ services:
     volumes:
       - "./db/run_db.sh:/tmp/run.sh"
       - "./db/imsi1-physical-eNB.json:/tmp/imsi1.json"
+    environment:
+      - DB_HOST=mongodb
     entrypoint:
       - /bin/sh
       - /tmp/run.sh

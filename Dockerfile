@@ -21,4 +21,5 @@ RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
 RUN apt-get --no-install-recommends -qy install tshark 
 
+ENV MONGODB_STARTUP_TIME 5
 WORKDIR /
