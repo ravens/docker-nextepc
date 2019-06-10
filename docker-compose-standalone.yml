@@ -55,7 +55,7 @@ services:
       - DB_HOST=127.0.0.1
     volumes:
       - "./provisioning/db/run_db.sh:/tmp/run.sh"
-      - "./provisioning/db/imsi1.json:/tmp/imsi1.json"
+      - "./provisioning/db/imsi1-standalone:/tmp/imsi1.json"
     entrypoint:
       - /bin/sh
       - /tmp/run.sh
