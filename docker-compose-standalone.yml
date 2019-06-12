@@ -9,16 +9,17 @@ services:
     container_name: "mongodb"
     volumes:
       - mongodb_data:/data/db
-    network_mode: host
+    ports:
+      - "127.0.0.1:27017:27017"
 
   webui:
     build: ./
     depends_on:
       - mongodb
+    network_mode: host
     environment:
       - DB_URI=mongodb://127.0.0.1/nextepc
     container_name: webui
-    network_mode: host
     restart: always
     environment:
         - MONGODB_STARTUP_TIME=10
@@ -51,6 +52,7 @@ services:
     image: mongo:latest
     depends_on:
       - webui
+    network_mode: host
     environment:
       - DB_HOST=127.0.0.1
       - MONGODB_STARTUP_TIME=20
@@ -60,4 +62,3 @@ services:
     entrypoint:
       - /bin/sh
       - /tmp/run.sh
-    network_mode: host
