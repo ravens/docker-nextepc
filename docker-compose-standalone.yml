@@ -36,7 +36,7 @@ services:
     network_mode: host
     restart: always
     environment:
-        - MONGODB_STARTUP_TIME=10
+        - MONGODB_STARTUP_TIME=20
     entrypoint:
         - "/bin/sh"
         - "/etc/nextepc/run_epc.sh"
@@ -53,6 +53,7 @@ services:
       - webui
     environment:
       - DB_HOST=127.0.0.1
+      - MONGODB_STARTUP_TIME=20
     volumes:
       - "./provisioning/db/run_db.sh:/tmp/run.sh"
       - "./provisioning/db/imsi1-standalone.json:/tmp/imsi1.json"
