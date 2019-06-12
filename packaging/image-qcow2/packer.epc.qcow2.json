@@ -1,0 +1,81 @@
+{
+  "variables": {
+    "user": "ubuntu",
+    "password": "password",
+    "disk_size": "10000"
+  },
+  "provisioners": [
+    {
+      "type": "shell",
+      "execute_command": "echo '{{user `password`}}' | {{ .Vars }} sudo -E -S sh '{{ .Path }}'",
+      "inline": ["echo '%sudo    ALL=(ALL)  NOPASSWD:ALL' >> /etc/sudoers"]
+    },
+    {
+      "type": "shell",
+      "inline": [
+        "sudo apt-get -y update",
+        "sudo apt-get -yq install software-properties-common",
+        "sudo apt-add-repository --yes --update ppa:ansible/ansible",
+        "sudo apt-get -qy install ansible git",
+        "git clone https://github.com/ravens/docker-nextepc.git /home/{{user `user`}}/epc",
+        "echo 'localhost ansible_connection=local' | tee /home/{{user `user`}}/inventory",
+        "ansible-playbook -i /home/{{user `user`}}/inventory --user={{user `user`}} -b /home/{{user `user`}}/epc/playbook-standalone.yml"
+      ]
+    }
+  ],
+  "builders":
+  [
+    {
+      "type": "qemu",
+      "qemuargs": [[ "-m", "2048M" ]],
+      "accelerator": "kvm",
+      "iso_url": "http://cdimage.ubuntu.com/releases/18.04.2/release/ubuntu-18.04.2-server-amd64.iso",
+      "iso_checksum_url": "http://cdimage.ubuntu.com/releases/18.04.2/release/SHA256SUMS",
+      "iso_checksum_type": "sha256",
+      "output_directory": "packer_output",
+      "shutdown_command": "echo '{{user `password`}}'|sudo -S shutdown -P now",
+      "disk_size": "{{ user `disk_size`}}",
+      "format": "qcow2",
+      "headless": true,
+      "http_directory": "packer_http",
+      "ssh_username": "{{user `user`}}",
+	    "ssh_password": "{{user `password`}}",
+      "ssh_port": 22,
+      "ssh_pty" : "true",
+      "ssh_wait_timeout": "10000s",
+      "vm_name": "epc.qcow2",
+      "net_device": "virtio-net",
+      "disk_interface": "virtio",
+      "boot_wait": "10s",
+      "boot_command": [
+        "<esc><wait>",
+        "<esc><wait>",
+        "<enter><wait>",
+        "/install/vmlinuz<wait>",
+        " auto<wait>",
+        " console-setup/ask_detect=false<wait>",
+        " console-setup/layoutcode=us<wait>",
+        " console-setup/modelcode=pc105<wait>",
+        " debconf/frontend=noninteractive<wait>",
+        " debian-installer=en_US<wait>",
+        " fb=false<wait>",
+        " initrd=/install/initrd.gz<wait>",
+        " kbd-chooser/method=us<wait>",
+        " keyboard-configuration/layout=USA<wait>",
+        " keyboard-configuration/variant=USA<wait>",
+        " locale=en_US<wait>",
+        " netcfg/get_domain=vm<wait>",
+        " netcfg/get_hostname=epc<wait>",
+        " passwd/user-fullname={{user `user`}}<wait>",
+        " passwd/user-password-again={{user `password`}}<wait>",
+        " passwd/user-password={{user `password`}}<wait>",
+        " passwd/username={{user `user`}}<wait>",
+        " grub-installer/bootdev=/dev/vda<wait>",
+        " noapic<wait>",
+        " preseed/url=http://{{ .HTTPIP }}:{{ .HTTPPort }}/preseed.cfg<wait>",
+        " -- <wait>",
+        "<enter><wait>"
+          ]
+    }
+  ]
+}
