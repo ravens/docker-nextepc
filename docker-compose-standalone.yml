@@ -7,6 +7,7 @@ services:
   mongodb:
     image: mongo:latest
     container_name: "mongodb"
+    restart: always
     volumes:
       - mongodb_data:/data/db
     ports:
