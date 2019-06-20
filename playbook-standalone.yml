@@ -24,3 +24,4 @@
         - "epc.epc.state.running"
         - "webui.webui.state.running"
         - "mongodb.mongodb.state.running"
+        - "dbprovisioner.dbprovisioner.state.running"
