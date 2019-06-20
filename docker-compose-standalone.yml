@@ -54,6 +54,7 @@ services:
     depends_on:
       - webui
     network_mode: host
+    container_name: dbprovisioner
     environment:
       - DB_HOST=127.0.0.1
       - MONGODB_STARTUP_TIME=20
