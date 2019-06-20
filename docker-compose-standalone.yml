@@ -49,7 +49,7 @@ services:
     devices:
        - /dev/net/tun
 
-  mongodbloader:
+  dbprovisioner:
     image: mongo:latest
     depends_on:
       - webui
