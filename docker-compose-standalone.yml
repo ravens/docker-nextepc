@@ -7,61 +7,98 @@ services:
   mongodb:
     image: mongo:latest
     container_name: "mongodb"
-    restart: always
     volumes:
       - mongodb_data:/data/db
-    ports:
-      - "127.0.0.1:27017:27017"
+    network_mode: host
 
   webui:
     build: ./
     depends_on:
       - mongodb
-    network_mode: host
     environment:
-      - DB_URI=mongodb://127.0.0.1/nextepc
+      - DB_URI=mongodb://127.0.0.1/open5gs
     container_name: webui
-    restart: always
-    environment:
-        - MONGODB_STARTUP_TIME=10
-    entrypoint:
-        - "/bin/sh"
-        - "/etc/nextepc/run_webui.sh"
-    volumes:
-        - "./config-standalone:/etc/nextepc"
-
-  epc:
-    build: ./
-    depends_on:
-      - mongodb
-    container_name: epc
     network_mode: host
-    restart: always
-    environment:
-        - MONGODB_STARTUP_TIME=20
-    entrypoint:
-        - "/bin/sh"
-        - "/etc/nextepc/run_epc.sh"
+    ports:
+      - "3000:3000"
     volumes:
-        - "./config-standalone:/etc/nextepc"
-    cap_add:
-       -  NET_ADMIN
-    devices:
-       - /dev/net/tun
+        - "./config-standalone:/usr/local/etc"
+    entrypoint:
+      - "/bin/sh"
+      - "/usr/local/etc/run_webui.sh"
 
-  dbprovisioner:
+  mongodbloader:
     image: mongo:latest
     depends_on:
       - webui
-    network_mode: host
-    container_name: dbprovisioner
-    restart: always
     environment:
       - DB_HOST=127.0.0.1
-      - MONGODB_STARTUP_TIME=20
+    network_mode: host
     volumes:
       - "./provisioning/db/run_db.sh:/tmp/run.sh"
-      - "./provisioning/db/imsi1-standalone.json:/tmp/imsi1.json"
+      - "./provisioning/db/imsi1.json:/tmp/imsi1.json"
     entrypoint:
       - /bin/sh
       - /tmp/run.sh
+
+
+  hss:
+    build: ./
+    depends_on:
+      - mongodb
+    container_name: hss
+    network_mode: host
+    entrypoint:
+      - "/bin/sh"
+      - "/usr/local/etc/run_hss.sh"
+    volumes:
+      - "./config-standalone:/usr/local/etc"
+
+  mme:
+     build: ./
+     depends_on:
+       - hss
+     container_name: mme
+     network_mode: host
+     entrypoint:
+      - "/bin/sh"
+      - "/usr/local/etc/run_mme.sh"
+     volumes:
+      - "./config-standalone:/usr/local/etc"
+
+  sgw:
+     build: ./
+     container_name: sgw
+     network_mode: host
+     entrypoint:
+      - "/bin/sh"
+      - "/usr/local/etc/run_sgw.sh"
+     volumes:
+      - "./config-standalone:/usr/local/etc"
+
+  pgw:
+     build: ./
+     container_name: pgw
+     network_mode: host
+     entrypoint:
+      - "/bin/sh"
+      - "/usr/local/etc/run_pgw.sh"
+     volumes:
+      - "./config-standalone:/usr/local/etc"
+     cap_add:
+       -  NET_ADMIN
+     devices:
+       -  /dev/net/tun
+      
+  pcrf:
+    build: ./
+    depends_on:
+       - mongodb
+       - hss
+    container_name: pcrf
+    network_mode: host
+    entrypoint:
+      - "/bin/sh"
+      - "/usr/local/etc/run_pcrf.sh"
+    volumes:
+      - "./config-standalone:/usr/local/etc"

@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # database export reference
-#mongoexport  --host  ${DB_HOST} --db nextepc --collection subscribers -o /tmp/imsi1.json --jsonArray
+#mongoexport  --host  ${DB_HOST} --db open5gs --collection subscribers -o /tmp/imsi1.json --jsonArray
 
 if [ -n "${DB_HOST}" ]; then
   echo "Database variable found"
@@ -21,5 +21,5 @@ fi
 echo "Waiting for " ${MONGODB_STARTUP_TIME} "s for mongodb to be ready..."
 sleep ${MONGODB_STARTUP_TIME}
 
-mongoimport --host ${DB_HOST} --db nextepc --collection subscribers --file /tmp/imsi1.json --type json  --jsonArray
+mongoimport --host ${DB_HOST} --db open5gs --collection subscribers --file /tmp/imsi1.json --type json  --jsonArray
 sleep infinity

@@ -10,10 +10,8 @@ sh -c "echo 1 > /proc/sys/net/ipv4/ip_forward"
 iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE
 iptables -I INPUT -i pgwtun -j ACCEPT
 
-#/nextepc/nextepc-epcd -f /config/nextepc.conf
+touch /usr/local/var/log/open5gs/pgw.log
 
-touch /var/log/nextepc/pgw.log
+tail -f /usr/local/var/log/open5gs/pgw.log &
 
-tail -f /var/log/nextepc/pgw.log &
-
-/bin/nextepc-pgwd -f  /etc/nextepc/pgw.conf
+open5gs-pgwd -c /usr/local/etc/open5gs/pgw.yaml

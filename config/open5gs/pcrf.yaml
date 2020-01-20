@@ -1,0 +1,15 @@
+### For reference, see `nextepc.conf`
+
+db_uri: mongodb://192.168.26.5/open5gs
+
+logger:
+    file: /usr/local/var/log/open5gs/pcrf.log
+    trace: 
+        app: 1
+        diameter: 1
+
+parameter:
+    no_ipv6: true
+
+pcrf:
+    freeDiameter: /usr/local/etc/freeDiameter/pcrf.conf

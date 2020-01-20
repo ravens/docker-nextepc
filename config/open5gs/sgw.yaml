@@ -1,7 +1,5 @@
-### For reference, see `nextepc.conf`
-
 logger:
-    file: /var/log/nextepc/sgw.log
+    file: /usr/local/var/log/open5gs/sgw.log
     trace: 
         app: 1
         gtpv2: 1

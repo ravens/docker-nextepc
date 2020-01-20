@@ -21,11 +21,12 @@ iptables -A FORWARD -j ACCEPT
 # to avoid fragmentation related issue, let's tune the MSS window
 iptables -t mangle -A POSTROUTING -p tcp --tcp-flags SYN,RST SYN -o eth0 -j TCPMSS --set-mss 1300
 
-touch /var/log/nextepc/nextepc.log
+touch /var/log/open5gs/open5gs.log
 
-tail -f /var/log/nextepc/nextepc.log &
+tail -f /var/log/open5gs/open5gs.log &
 
 echo "Waiting for " ${MONGODB_STARTUP_TIME} "s for mongodb to be ready..."
 sleep ${MONGODB_STARTUP_TIME}
 
-/bin/nextepc-epcd -f /etc/nextepc/nextepc.conf
+sleep infinity
+open5gs-epcd -f /usr/local/etc/open5gs.conf
