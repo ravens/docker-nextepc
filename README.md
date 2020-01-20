@@ -118,13 +118,7 @@ docker exec -it sgw tshark -i eth0
 ```
 
 ## others options :
- * all-in-one EPC using [docker-compose -f docker-compose-allinone-epc.yml](./docker-compose-allinone-epc.yml) with the simulatoed UE+eNB using srsLTE
  * standalone using the network of the host with [docker-compose -f docker-compose-standalone.yml](./docker-compose-standalone.yml). A [Vagrantfile](./Vagrantfile) and an [Ansible](./playbook-standalone.yml) playbook are provided to simulate a deployment in the cloud.
- * all-in-one EPC with a physical eNB using [docker-compose -f docker-compose-allinone-epc-physical-eNB.yml](./docker-compose-allinone-epc-physical-eNB.yml) - in that case the docker-compose is creating a br-lab device, you just need to add conveniently your physical network to that bridge using something like :
- ```
- ip link set eth0 master br-lab
- ```
-A DHCP service using dnsmasq is providing addresses to the physical eNB in that case.
 
 
 ## configuration
