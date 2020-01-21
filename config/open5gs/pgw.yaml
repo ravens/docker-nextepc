@@ -2,6 +2,7 @@
 
 logger:
   file: /usr/local/var/log/open5gs/pgw.log
+  level: debug
   trace: 
       app: 1
       diameter: 1

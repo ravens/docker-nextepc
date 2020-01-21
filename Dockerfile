@@ -43,8 +43,7 @@ RUN cd /open5gs/webui && npm install && npm run build
 ENV TZ=Europe/Madrid
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
-
-RUN apt-get --no-install-recommends -qy install tshark 
+RUN apt-get --no-install-recommends -qy install tshark iptables net-tools 
 
 ENV MONGODB_STARTUP_TIME 5
 WORKDIR /root
