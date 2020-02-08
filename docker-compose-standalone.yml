@@ -22,7 +22,7 @@ services:
     ports:
       - "3000:3000"
     volumes:
-        - "./config-standalone:/usr/local/etc"
+        - "./config-standalone:/usr/local/etc:z"
     entrypoint:
       - "/bin/sh"
       - "/usr/local/etc/run_webui.sh"
@@ -35,12 +35,11 @@ services:
       - DB_HOST=127.0.0.1
     network_mode: host
     volumes:
-      - "./provisioning/db/run_db.sh:/tmp/run.sh"
-      - "./provisioning/db/imsi1.json:/tmp/imsi1.json"
+      - "./provisioning/db/run_db.sh:/tmp/run.sh:z"
+      - "./provisioning/db/imsi1.json:/tmp/imsi1.json:z"
     entrypoint:
       - /bin/sh
       - /tmp/run.sh
-
 
   hss:
     build: ./
@@ -52,8 +51,8 @@ services:
       - "/bin/sh"
       - "/usr/local/etc/run_hss.sh"
     volumes:
-      - "./config-standalone:/usr/local/etc"
-
+      - "./config-standalone:/usr/local/etc:z"
+      
   mme:
      build: ./
      depends_on:
@@ -64,7 +63,7 @@ services:
       - "/bin/sh"
       - "/usr/local/etc/run_mme.sh"
      volumes:
-      - "./config-standalone:/usr/local/etc"
+      - "./config-standalone:/usr/local/etc:z"
 
   sgw:
      build: ./
@@ -74,7 +73,7 @@ services:
       - "/bin/sh"
       - "/usr/local/etc/run_sgw.sh"
      volumes:
-      - "./config-standalone:/usr/local/etc"
+      - "./config-standalone:/usr/local/etc:z"
 
   pgw:
      build: ./
@@ -84,11 +83,12 @@ services:
       - "/bin/sh"
       - "/usr/local/etc/run_pgw.sh"
      volumes:
-      - "./config-standalone:/usr/local/etc"
+      - "./config-standalone:/usr/local/etc:z"
+     devices:
+      - /dev/net/tun
+     privileged: true
      cap_add:
        -  NET_ADMIN
-     devices:
-       -  /dev/net/tun
       
   pcrf:
     build: ./
@@ -101,4 +101,5 @@ services:
       - "/bin/sh"
       - "/usr/local/etc/run_pcrf.sh"
     volumes:
-      - "./config-standalone:/usr/local/etc"
+      - "./config-standalone:/usr/local/etc:z"
+

@@ -5,6 +5,8 @@ sleep ${MONGODB_STARTUP_TIME}
 
 echo "Launching HSS..."
 
+ls /usr/local/etc -l
+
 touch /usr/local/var/log/open5gs/hss.log
 
 tail -f /usr/local/var/log/open5gs/hss.log &

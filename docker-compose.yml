@@ -37,7 +37,7 @@ services:
     ports:
       - "3000:3000"
     volumes:
-        - "./config:/usr/local/etc"
+        - "./config:/usr/local/etc:z"
     entrypoint:
       - "/bin/sh"
       - "/usr/local/etc/run_webui.sh"
@@ -52,8 +52,8 @@ services:
     environment:
       - DB_HOST=mongodb
     volumes:
-      - "./provisioning/db/run_db.sh:/tmp/run.sh"
-      - "./provisioning/db/imsi1.json:/tmp/imsi1.json"
+      - "./provisioning/db/run_db.sh:/tmp/run.shi:z"
+      - "./provisioning/db/imsi1.json:/tmp/imsi1.json:z"
     entrypoint:
       - /bin/sh
       - /tmp/run.sh
@@ -71,7 +71,7 @@ services:
       - "/bin/sh"
       - "/usr/local/etc/run_hss.sh"
     volumes:
-      - "./config:/usr/local/etc"
+      - "./config:/usr/local/etc:z"
     networks:
       core_network:
         ipv4_address: 192.168.26.10
@@ -86,7 +86,7 @@ services:
       - "/bin/sh"
       - "/usr/local/etc/run_mme.sh"
      volumes:
-      - "./config:/usr/local/etc"
+      - "./config:/usr/local/etc:z"
      networks:
        core_network:
          ipv4_address: 192.168.26.20
@@ -99,7 +99,7 @@ services:
       - "/bin/sh"
       - "/usr/local/etc/run_sgw.sh"
      volumes:
-      - "./config:/usr/local/etc"
+      - "./config:/usr/local/etc:z"
      networks:
        core_network:
          ipv4_address: 192.168.26.30
@@ -112,7 +112,7 @@ services:
       - "/bin/sh"
       - "/usr/local/etc/run_pgw.sh"
      volumes:
-      - "./config:/usr/local/etc"
+      - "./config:/usr/local/etc:z"
      cap_add:
        -  NET_ADMIN
      devices:
@@ -132,7 +132,7 @@ services:
       - "/bin/sh"
       - "/usr/local/etc/run_pcrf.sh"
     volumes:
-      - "./config:/usr/local/etc"
+      - "./config:/usr/local/etc:z"
     networks:
        core_network:
          ipv4_address: 192.168.26.50
@@ -142,14 +142,14 @@ services:
     container_name: enb
     depends_on:
       - mme
-    ipc: shareable
+    ipc: shareable 
     cap_add:
       - SYS_NICE
     networks:
       core_network:
          ipv4_address: 192.168.26.60
     volumes:
-      - ./virtual-UE-eNB/run_enb.sh:/root/run_enb.sh
+      - ./virtual-UE-eNB/run_enb.sh:/root/run_enb.sh:z
     entrypoint:
       - /bin/sh
       - /root/run_enb.sh
@@ -157,7 +157,7 @@ services:
   ue:
     container_name: ue
     build: ./virtual-UE-eNB
-    ipc: "container:enb"
+    ipc: ipc: "container:enb"
     cap_add:
       - NET_ADMIN
       - SYS_NICE
@@ -167,7 +167,7 @@ services:
     depends_on:
       - enb
     volumes:
-      - ./virtual-UE-eNB/run_ue.sh:/root/run_ue.sh
+      - ./virtual-UE-eNB/run_ue.sh:/root/run_ue.sh:z
     entrypoint:
       - /bin/sh
       - /root/run_ue.sh
