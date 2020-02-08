@@ -152,6 +152,7 @@ services:
   enb:
     build: ./srsLTE
     container_name: enb
+    ipc: shareable
     depends_on:
       - mme
     cap_add:
@@ -170,6 +171,7 @@ services:
   ue:
     container_name: ue
     build: ./srsLTE
+    ipc: "container:enb" 
     cap_add:
       - NET_ADMIN
       - SYS_NICE
