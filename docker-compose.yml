@@ -7,6 +7,8 @@ networks:
   core_network:
     #enable_ipv6: true
     driver: bridge
+    driver_opts:     
+      com.docker.network.bridge.name: corenet
     ipam:
       driver: default
       config:
@@ -16,6 +18,8 @@ networks:
         #   gateway: 2001:1001:26::1
   rf_network:
     driver: bridge
+    driver_opts:     
+      com.docker.network.bridge.name: rf
     ipam:
       driver: default
       config:
