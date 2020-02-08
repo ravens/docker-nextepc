@@ -1,0 +1,175 @@
+version: '2'
+
+volumes:
+ mongodb_data:
+
+networks:
+  core_network:
+    #enable_ipv6: true
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 192.168.26.0/24
+          gateway: 192.168.26.1
+        # - subnet: 200 networks:1:1001:26::/64
+        #   gateway: 2001:1001:26::1
+
+services:
+  mongodb:
+    image: mongo:latest
+    container_name: "mongodb"
+    volumes:
+      - mongodb_data:/data/db
+    hostname: mongodb
+    networks:
+      core_network:
+        ipv4_address: 192.168.26.5
+
+  webui:
+    build: ./
+    depends_on:
+      - mongodb
+    environment:
+      - DB_URI=mongodb://mongodb/open5gs
+    container_name: webui
+    hostname: webui
+    ports:
+      - "3000:3000"
+    volumes:
+        - "./config:/usr/local/etc:z"
+    entrypoint:
+      - "/bin/sh"
+      - "/usr/local/etc/run_webui.sh"
+    networks:
+      core_network:
+        ipv4_address: 192.168.26.6
+
+  mongodbloader:
+    image: mongo:latest
+    depends_on:
+      - webui
+    environment:
+      - DB_HOST=mongodb
+    volumes:
+      - "./provisioning/db/run_db.sh:/tmp/run.shi:z"
+      - "./provisioning/db/imsi1.json:/tmp/imsi1.json:z"
+    entrypoint:
+      - /bin/sh
+      - /tmp/run.sh
+    networks:
+      core_network:
+        ipv4_address: 192.168.26.19
+
+  hss:
+    build: ./
+    depends_on:
+      - mongodb
+    container_name: hss
+    hostname: hss
+    entrypoint:
+      - "/bin/sh"
+      - "/usr/local/etc/run_hss.sh"
+    volumes:
+      - "./config:/usr/local/etc:z"
+    networks:
+      core_network:
+        ipv4_address: 192.168.26.10
+
+  mme:
+     build: ./
+     depends_on:
+       - hss
+     container_name: mme
+     hostname: mme
+     entrypoint:
+      - "/bin/sh"
+      - "/usr/local/etc/run_mme.sh"
+     volumes:
+      - "./config:/usr/local/etc:z"
+     networks:
+       core_network:
+         ipv4_address: 192.168.26.20
+
+  sgw:
+     build: ./
+     container_name: sgw
+     hostname: sgw
+     entrypoint:
+      - "/bin/sh"
+      - "/usr/local/etc/run_sgw.sh"
+     volumes:
+      - "./config:/usr/local/etc:z"
+     networks:
+       core_network:
+         ipv4_address: 192.168.26.30
+
+  pgw:
+     build: ./
+     container_name: pgw
+     hostname: pgw
+     entrypoint:
+      - "/bin/sh"
+      - "/usr/local/etc/run_pgw.sh"
+     volumes:
+      - "./config:/usr/local/etc:z"
+     cap_add:
+       -  NET_ADMIN
+     devices:
+       -  /dev/net/tun
+     networks:
+       core_network:
+         ipv4_address: 192.168.26.40
+
+  pcrf:
+    build: ./
+    depends_on:
+       - mongodb
+       - hss
+    container_name: pcrf
+    hostname: pcrf
+    entrypoint:
+      - "/bin/sh"
+      - "/usr/local/etc/run_pcrf.sh"
+    volumes:
+      - "./config:/usr/local/etc:z"
+    networks:
+       core_network:
+         ipv4_address: 192.168.26.50
+
+  enb:
+    build: ./srsLTE-fauxRF
+    container_name: enb
+    depends_on:
+      - mme
+    ipc: shareable 
+    cap_add:
+      - SYS_NICE
+    networks:
+      core_network:
+         ipv4_address: 192.168.26.60
+    volumes:
+      - ./srsLTE-fauxRF/run_enb.sh:/root/run_enb.sh:z
+    entrypoint:
+      - /bin/sh
+      - /root/run_enb.sh
+
+  ue:
+    container_name: ue
+    build: ./virtual-UE-eNB
+    ipc: ipc: "container:enb"
+    cap_add:
+      - NET_ADMIN
+      - SYS_NICE
+    devices:
+      - /dev/net/tun
+    network_mode: "none"
+    depends_on:
+      - enb
+    volumes:
+      - ./srsLTE-fauxRF/run_ue.sh:/root/run_ue.sh:z
+    entrypoint:
+      - /bin/sh
+      - /root/run_ue.sh
+
+
