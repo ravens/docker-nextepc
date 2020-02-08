@@ -156,8 +156,8 @@ services:
 
   ue:
     container_name: ue
-    build: ./virtual-UE-eNB
-    ipc: ipc: "container:enb"
+    build: ./srsLTE-fauxRF
+    ipc: "container:enb"
     cap_add:
       - NET_ADMIN
       - SYS_NICE

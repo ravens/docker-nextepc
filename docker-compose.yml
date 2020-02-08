@@ -14,6 +14,14 @@ networks:
           gateway: 192.168.26.1
         # - subnet: 200 networks:1:1001:26::/64
         #   gateway: 2001:1001:26::1
+  rf_network:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 192.168.28.0/24
+          gateway: 192.168.28.1
+
 
 services:
   mongodb:
@@ -138,38 +146,40 @@ services:
          ipv4_address: 192.168.26.50
 
   enb:
-    build: ./virtual-UE-eNB
+    build: ./srsLTE
     container_name: enb
     depends_on:
       - mme
-    ipc: shareable 
     cap_add:
       - SYS_NICE
     networks:
       core_network:
          ipv4_address: 192.168.26.60
+      rf_network:
+         ipv4_address: 192.168.28.60
     volumes:
-      - ./virtual-UE-eNB/run_enb.sh:/root/run_enb.sh:z
+      - ./srsLTE:/config:z
     entrypoint:
       - /bin/sh
-      - /root/run_enb.sh
+      - /config/run_enb.sh
 
   ue:
     container_name: ue
-    build: ./virtual-UE-eNB
-    ipc: ipc: "container:enb"
+    build: ./srsLTE
     cap_add:
       - NET_ADMIN
       - SYS_NICE
     devices:
       - /dev/net/tun
-    network_mode: "none"
+    networks:
+      rf_network:
+          ipv4_address: 192.168.28.61
     depends_on:
       - enb
     volumes:
-      - ./virtual-UE-eNB/run_ue.sh:/root/run_ue.sh:z
+      - ./srsLTE:/config:z
     entrypoint:
       - /bin/sh
-      - /root/run_ue.sh
+      - /config/run_ue.sh
 
 
