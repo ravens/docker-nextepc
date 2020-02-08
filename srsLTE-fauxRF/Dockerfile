@@ -20,7 +20,9 @@ RUN apt-get install --no-install-recommends -yq \
 WORKDIR /root
 
 RUN apt-get --no-install-recommends -qy install build-essential git ca-certificates
-RUN git clone https://github.com/jgiovatto/srsLTE.git && cd srsLTE && git checkout faux_rf
+# faux_rf being active, we clamp it to a specific git commit
+RUN git clone https://github.com/jgiovatto/srsLTE.git && cd srsLTE && git checkout 5d82f19988bc148d7f4cec7a0f29184375a64b40 
+
 
 RUN mkdir -p /root/srsLTE/build
 
