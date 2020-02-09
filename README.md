@@ -1,5 +1,5 @@
 # docker-nextepc
-Docker-based LTE environement featuring NextEPC as MME, SGW and PGW, and srsLTE using the FauxRF patch to simulate a UE and an eNB. Also provided, alternate docker-compose for all-in-one EPC kind of node, and physical UE/eNB lab configuration. 
+Docker-based LTE environement featuring NextEPC as MME, SGW and PGW, and srsLTE using the FauxRF (or srsLTE with ZMQ fake device) patch to simulate a UE and an eNB. Also provided, alternate docker-compose files for all-in-one EPC kind of node, zmq TCP pseudo radio, etc.
 
 [![Build Status](https://travis-ci.org/ravens/docker-nextepc.svg?branch=master)](https://travis-ci.org/ravens/docker-nextepc)
 
@@ -34,19 +34,19 @@ Docker-based LTE environement featuring NextEPC as MME, SGW and PGW, and srsLTE 
 ## setup 
 
 ```
-docker-compose build --no-cache
+docker-compose -f docker-compose-fauxrf.yml build --no-cache
 ```
 
 ## running
 
 We just need to run the docker-compose:
 ```
-docker-compose up -d
+docker-compose -f docker-compose-fauxrf.yml up -d
 ```
 
 The following service should be running:
 ```
-docker-compose ps
+docker-compose -f docker-compose-fauxrf.yml ps
  Name                Command               State           Ports
 -------------------------------------------------------------------------
 enb       stdbuf -o L srsenb /config ...   Up
@@ -118,9 +118,9 @@ docker exec -it sgw tshark -i eth0
 ```
 
 ## others options :
- * standalone using the network of the host with [docker-compose -f docker-compose-standalone.yml](./docker-compose-standalone.yml). A [Vagrantfile](./Vagrantfile) and an [Ansible](./playbook-standalone.yml) playbook are provided to simulate a deployment in the cloud.
-
-
+ * standalone EPC using the network of the host with [docker-compose -f docker-compose-standalone.yml](./docker-compose-standalone.yml). A [Vagrantfile](./Vagrantfile) and an [Ansible](./playbook-standalone.yml) playbook are provided to simulate a deployment in the cloud.
+ * virtual UE and eNB using ZMQ from upstream srsLTE project. FauxRF will apparently not be making it upstream, and upstream project is using a message bus to share samples between UE and eNB. I did not managed to make it work properly yet - I have RACH errors probably related to timing and other configuration parameters. This configuration is available via [docker-compose](./docker-compose.yml)
+ 
 ## configuration
 
 The SIM card provisioned in the virtual UE (from srsUE) and the EPC is using the following parameters : 
