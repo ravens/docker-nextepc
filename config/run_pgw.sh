@@ -10,6 +10,7 @@ sh -c "echo 1 > /proc/sys/net/ipv4/ip_forward"
 iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE
 iptables -I INPUT -i ogstun -j ACCEPT
 
+mkdir -p /usr/local/var/log/open5gs
 touch /usr/local/var/log/open5gs/pgw.log
 
 tail -f /usr/local/var/log/open5gs/pgw.log &

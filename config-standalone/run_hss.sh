@@ -7,6 +7,7 @@ echo "Launching HSS..."
 
 ls /usr/local/etc -l
 
+mkdir -p /usr/local/var/log/open5gs
 touch /usr/local/var/log/open5gs/hss.log
 
 tail -f /usr/local/var/log/open5gs/hss.log &

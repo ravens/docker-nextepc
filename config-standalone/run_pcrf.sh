@@ -2,6 +2,7 @@
 
 echo "Launching PCRF..."
 
+mkdir -p /usr/local/var/log/open5gs
 touch /usr/local/var/log/open5gs/pcrf.log
 
 tail -f /usr/local/var/log/open5gs/pcrf.log &

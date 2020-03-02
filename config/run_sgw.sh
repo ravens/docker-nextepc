@@ -3,6 +3,7 @@
 
 echo "Launching SGW..."
 
+mkdir -p /usr/local/var/log
 touch /usr/local/var/log/open5gs/sgw.log
 
 tail -f /usr/local/var/log/open5gs/sgw.log &
