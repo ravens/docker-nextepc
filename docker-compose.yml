@@ -5,7 +5,6 @@ volumes:
 
 networks:
   core_network:
-    #enable_ipv6: true
     driver: bridge
     driver_opts:     
       com.docker.network.bridge.name: corenet
@@ -14,8 +13,6 @@ networks:
       config:
         - subnet: 192.168.26.0/24
           gateway: 192.168.26.1
-        # - subnet: 200 networks:1:1001:26::/64
-        #   gateway: 2001:1001:26::1
   rf_network:
     driver: bridge
     driver_opts:     
@@ -62,7 +59,7 @@ services:
     depends_on:
       - webui
     environment:
-      - DB_HOST=mongodb
+      - DB_HOST=192.168.26.5
     volumes:
       - "./provisioning/db/run_db.sh:/tmp/run.sh:z"
       - "./provisioning/db/imsi1.json:/tmp/imsi1.json:z"

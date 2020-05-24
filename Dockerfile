@@ -47,5 +47,5 @@ RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
 RUN apt-get --no-install-recommends -qy install tshark iptables net-tools 
 
-ENV MONGODB_STARTUP_TIME 20
+RUN apt-get --no-install-recommends -qy install mongodb-clients
 WORKDIR /root

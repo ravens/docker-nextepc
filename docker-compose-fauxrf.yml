@@ -5,15 +5,14 @@ volumes:
 
 networks:
   core_network:
-    #enable_ipv6: true
     driver: bridge
+    driver_opts:     
+      com.docker.network.bridge.name: networkinabox
     ipam:
       driver: default
       config:
         - subnet: 192.168.26.0/24
           gateway: 192.168.26.1
-        # - subnet: 200 networks:1:1001:26::/64
-        #   gateway: 2001:1001:26::1
 
 services:
   mongodb:
