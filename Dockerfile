@@ -7,6 +7,8 @@ RUN apt-get -yq dist-upgrade
 RUN apt-get update && \
     apt-get upgrade -y && \
     apt-get install -y --no-install-recommends \
+        libmicrohttpd-dev \
+        libcurl4-gnutls-dev \
         python3-pip \
         python3-setuptools \
         python3-wheel \
