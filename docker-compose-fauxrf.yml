@@ -52,11 +52,11 @@ services:
     environment:
       - DB_HOST=mongodb
     volumes:
-      - "./provisioning/db/run_db.sh:/tmp/run_db.sh:z"
+      - "./provisioning/db/run_db.sh:/tmp/run.sh:z"
       - "./provisioning/db/imsi1.json:/tmp/imsi1.json:z"
     entrypoint:
       - /bin/sh
-      - /tmp/run_db.sh
+      - /tmp/run.sh
     networks:
       core_network:
         ipv4_address: 192.168.26.19
