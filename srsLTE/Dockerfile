@@ -17,7 +17,8 @@ RUN apt-get install --no-install-recommends -yq \
      curl \
      iputils-ping \
      unzip \
-     libzmq3-dev
+     libzmq3-dev \
+     libpcsclite-dev
 WORKDIR /root
 
 RUN apt-get --no-install-recommends -qy install build-essential git ca-certificates
@@ -27,7 +28,8 @@ RUN mkdir -p /root/srsLTE/build
 
 WORKDIR /root/srsLTE/build
 RUN cmake ../
-RUN make -j `nproc` install
+RUN make -j `nproc`
+RUN make install
 RUN ldconfig
 
 WORKDIR /root
